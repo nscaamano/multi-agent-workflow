@@ -47,6 +47,13 @@ implementation work and delegates pieces to fresh subagents.
 > Rule of thumb: if two subtasks would edit the same file or depend on each other's output,
 > they are not independent — sequence them or give them to one agent.
 
+### Watching workers run
+
+Delegation doesn't mean flying blind. While workers run, you can observe their progress live —
+take bounded snapshots of a worker's output, or follow its log in real time. The `watch-agents`
+skill packages this (see [Installing the skills](../README.md#installing-the-skills)); invoke it
+with `/watch-agents`.
+
 ---
 
 ## Parallel Writes and Git
