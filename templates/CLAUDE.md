@@ -2,8 +2,9 @@
 
 > Drop-in hints file. Copy this to the root of your project, fill in the placeholders, and
 > grow it over time. Works as `CLAUDE.md` or `AGENTS.md`. The behavioral rules below are a
-> condensed mirror of `docs/02-ruleset.md` in the multi-agent-workflow repo — keep them, and
-> replace the project-specific sections with your own.
+> condensed mirror of the ruleset from the multi-agent-workflow reference repo
+> (https://github.com/nscaamano/multi-agent-workflow) — keep them, and replace the
+> project-specific sections with your own.
 
 ## How this project uses the multi-agent workflow
 
@@ -11,6 +12,7 @@
   doing it all in one context.
 - **Investigate in parallel** before planning; **split implementation** into independent pieces.
 - After non-trivial changes, run a **cross-model review** of the diff against `main`.
+- While workers run, observe their progress with `/watch-agents` (if the skill is installed).
 - When you correct me on something, I should add a rule to this file so it doesn't recur.
 
 ## Behavioral rules

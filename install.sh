@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# install.sh — copy this repo's skills into a Claude Code skills directory.
+# install.sh — copy this repo's skills and agents into a Claude Code config dir.
 #
-#   ./install.sh                  install globally to ~/.claude/skills/
-#   ./install.sh <project-dir>    install into <project-dir>/.claude/skills/
+#   ./install.sh                  install globally to ~/.claude/ (skills + agents)
+#   ./install.sh <project-dir>    install into <project-dir>/.claude/
 #   ./install.sh -h | --help      show this help
 #
-# Skills already present at the destination are overwritten.
+# Items already present at the destination are overwritten, so re-run to update.
 set -euo pipefail
 
 usage() {
@@ -19,46 +19,58 @@ esac
 
 # Resolve the directory this script lives in, so it works from any cwd.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC="$SCRIPT_DIR/.claude/skills"
+SRC_ROOT="$SCRIPT_DIR/.claude"
 
-if [ ! -d "$SRC" ]; then
-  echo "error: no skills found at $SRC" >&2
+if [ ! -d "$SRC_ROOT" ]; then
+  echo "error: no .claude/ directory found at $SRC_ROOT" >&2
   exit 1
 fi
 
-# Destination: global by default, or <project-dir>/.claude/skills if an arg is given.
+# Destination root: global by default, or <project-dir>/.claude if an arg is given.
 if [ -n "${1:-}" ]; then
-  TARGET_ROOT="$1"
-  if [ ! -d "$TARGET_ROOT" ]; then
-    echo "error: target directory does not exist: $TARGET_ROOT" >&2
+  TARGET="$1"
+  if [ ! -d "$TARGET" ]; then
+    echo "error: target directory does not exist: $TARGET" >&2
     exit 1
   fi
-  DEST="$TARGET_ROOT/.claude/skills"
-  SCOPE="project ($TARGET_ROOT)"
+  DEST_ROOT="$TARGET/.claude"
+  SCOPE="project ($TARGET)"
 else
-  DEST="$HOME/.claude/skills"
+  DEST_ROOT="$HOME/.claude"
   SCOPE="global"
 fi
 
-mkdir -p "$DEST"
+total=0
 
-installed=0
-for skill in "$SRC"/*/; do
-  [ -d "$skill" ] || continue
-  name="$(basename "$skill")"
-  rm -rf "$DEST/$name"
-  cp -R "$skill" "$DEST/$name"
-  # Ensure helper scripts stay executable.
-  find "$DEST/$name" -type f -name '*.sh' -exec chmod +x {} +
-  echo "  installed: $name"
-  installed=$((installed + 1))
-done
+# Copy every entry (skill dirs or agent files) from one category into the destination.
+install_category() {
+  local category="$1"
+  local src="$SRC_ROOT/$category"
+  [ -d "$src" ] || return 0
+  local dest="$DEST_ROOT/$category"
+  mkdir -p "$dest"
+  local entry name
+  for entry in "$src"/*; do
+    [ -e "$entry" ] || continue   # nothing matched the glob
+    name="$(basename "$entry")"
+    rm -rf "$dest/$name"
+    cp -R "$entry" "$dest/$name"
+    # Keep any helper scripts executable.
+    find "$dest/$name" -type f -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
+    echo "  $category: $name"
+    total=$((total + 1))
+  done
+}
 
-if [ "$installed" -eq 0 ]; then
-  echo "no skills to install (none found in $SRC)" >&2
+install_category skills
+install_category agents
+
+if [ "$total" -eq 0 ]; then
+  echo "no skills or agents found under $SRC_ROOT" >&2
   exit 1
 fi
 
 echo
-echo "Installed $installed skill(s) [$SCOPE] -> $DEST"
-echo "Invoke from Claude Code with /<skill-name>, e.g. /watch-agents"
+echo "Installed $total item(s) [$SCOPE] -> $DEST_ROOT"
+echo "Skills: invoke with /<skill-name> (e.g. /watch-agents)."
+echo "Agents: spawn via the Agent tool with subagent_type (e.g. implementer)."

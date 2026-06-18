@@ -12,6 +12,7 @@ keeps each one's context lean and on-task, which is faster, higher quality, *and
 - **Main session = orchestrator only.** Delegate all real work.
 - **Parallelize investigation.** 5+ focused subagents beat one mega-agent.
 - **Parallelize implementation.** Split changes into independent pieces, delegate each.
+- **Match model tier to task.** Orchestrate on Opus, implement on Sonnet, recon on Haiku.
 - **Cross-model review.** Have a second model review the first model's work.
 - **Keep a hints file.** Update `CLAUDE.md` / `AGENTS.md` whenever the agent misses something.
 - **Less context = better outputs.** Focused subagents beat one giant context window.
@@ -39,23 +40,28 @@ keeps each one's context lean and on-task, which is faster, higher quality, *and
 4. **Iterate.** Every time the agent makes a mistake, add a line to your project's hints
    file — and improve this repo's docs as your workflow sharpens.
 
-## Installing the skills
+## Installing the skills and agents
 
-This repo ships Claude Code skills under [.claude/skills/](.claude/skills/). Clone the repo and
-run the installer to copy them where Claude Code will find them:
+This repo ships Claude Code skills under [.claude/skills/](.claude/skills/) and agents under
+[.claude/agents/](.claude/agents/). Clone the repo and run the installer to copy them where
+Claude Code will find them:
 
 ```bash
 git clone <this-repo> multi-agent-workflow
 cd multi-agent-workflow
 
-./install.sh                 # install globally to ~/.claude/skills/ (all projects)
-./install.sh /path/to/repo   # install into one project's .claude/skills/
+./install.sh                 # install globally to ~/.claude/ (all projects)
+./install.sh /path/to/repo   # install into one project's .claude/
 ./install.sh --help          # usage
 ```
 
-Then invoke a skill from Claude Code with `/<skill-name>` — e.g. `/watch-agents` to see what a
-spawned worker agent is doing live. Re-running the installer overwrites previously installed
-copies, so it doubles as an update command.
+- **Skills** — invoke with `/<skill-name>`, e.g. `/watch-agents` to see what a spawned worker
+  agent is doing live.
+- **Agents** — spawn via the Agent tool with `subagent_type`, e.g. the `implementer` agent
+  (pinned to Sonnet) for routing implementation fan-out to a cheaper model than the orchestrator.
+
+Re-running the installer overwrites previously installed copies, so it doubles as an update
+command.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) for sources and [CHANGELOG.md](CHANGELOG.md) for the
 revision history. Licensed under [MIT](LICENSE).

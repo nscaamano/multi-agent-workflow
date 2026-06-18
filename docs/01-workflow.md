@@ -56,6 +56,48 @@ with `/watch-agents`.
 
 ---
 
+## Match the Model to the Job
+
+The workflow's headline savings come from lean context — but **model tier is the other half of
+the cost story, and it multiplies with context rather than competing with it.** A focused worker
+on a cheaper model is small context *and* cheap tokens at the same time.
+
+How model selection actually works when you spawn a subagent — no magic, no difficulty grading:
+
+> **explicit override** you pass on the spawn → else the **agent type's configured model** →
+> else **inherit the orchestrator's model**.
+
+Nothing inspects the task and picks a tier for you. What looks like difficulty-based selection is
+really *you matching the agent type to the job*. A sensible default split:
+
+- **Orchestrate on the strong model (e.g. Opus).** Planning and decomposition is where the strong
+  model earns its cost.
+- **Implement on a mid model (e.g. Sonnet).** Well-scoped, file-bounded edits rarely need the top
+  tier — and this is the bulk of the spend, so it's the highest-leverage place to economize.
+- **Recon on a cheap model (e.g. Haiku).** Read-only "map this code and report" jobs. (Claude
+  Code's Explore agent is already pinned here.)
+
+Two things make cheaper workers safe:
+
+- **Tighter specs.** A cheaper worker needs a more explicit spec — which the fan-out already
+  requires, and which pushes the thinking back onto the orchestrator where the strong model
+  lives. Economizing on workers and writing sharp specs are the same move.
+- **The cross-model review still runs.** The end-of-change second opinion (see
+  [docs/03-cross-model-review.md](03-cross-model-review.md)) catches what a cheaper implementer
+  misses.
+
+Make the policy durable instead of re-deciding each session: define a custom worker agent with
+the model baked into its frontmatter. This repo ships an `implementer` agent pinned to Sonnet
+(`.claude/agents/implementer.md`) — install it with `./install.sh` and route implementation
+fan-out to it.
+
+> **Cold start vs. fork.** A freshly spawned worker (like `implementer`) cold-starts: it runs on
+> its configured model with *no* shared context, so it needs a complete spec. A *fork* is the
+> exception — it inherits both the orchestrator's exact model and its full context, so it can't be
+> downgraded to save cost. Use forks when context-sharing matters more than the model bill.
+
+---
+
 ## Parallel Writes and Git
 
 Investigation parallelizes for free — it's read-only. Implementation does not. "Split into
