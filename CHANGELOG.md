@@ -10,8 +10,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 ### Added
 
 - Initial reference docs repo.
-- `docs/01-workflow.md` — orchestrator + worker pattern, parallel subagents, hints-file
-  iteration, and the six-step replicate loop.
+- `docs/01-workflow.md` — orchestrator + worker pattern, parallel subagents, parallel-writes
+  and git (ownership-based decomposition, worktrees, interface-first, semantic-merge caveats),
+  hints-file iteration, and the six-step replicate loop.
 - `docs/02-ruleset.md` — merged behavioral ruleset (four principles adapted from the
   andrej-karpathy-skills guidelines, with orchestration-aware notes).
 - `docs/03-cross-model-review.md` — tool-agnostic cross-model review.
