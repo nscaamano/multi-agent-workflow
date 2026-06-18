@@ -1,3 +1,7 @@
 # Captured output from spawned worker agents (see .claude/skills/watch-agents)
 .agent-logs/
 *.log
+
+# Mac
+.DS_Store
+
