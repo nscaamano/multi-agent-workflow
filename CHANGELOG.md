@@ -16,7 +16,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
   semantic-merge caveats), hints-file iteration, and the six-step replicate loop.
 - `docs/02-ruleset.md` — merged behavioral ruleset (four principles adapted from the
   andrej-karpathy-skills guidelines, with orchestration-aware notes).
-- `docs/03-cross-model-review.md` — tool-agnostic cross-model review.
+- `docs/03-cross-model-review.md` — tool-agnostic cross-model review, including how provider
+  selection actually happens (no automatic router; you/the hints file decide, native subagent
+  vs. shell-out, independence and billing as the two reasons to cross providers).
 - `docs/04-prompt-library.md` — copy-paste prompts per phase.
 - `templates/CLAUDE.md` — drop-in hints file template.
 - `.claude/skills/watch-agents/` — skill to observe spawned worker agents live (list running

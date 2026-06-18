@@ -26,6 +26,34 @@ The flow:
 2. Orchestrator shells out to the second CLI and asks it to review the diff against `main`.
 3. Reviewer reports issues; orchestrator triages them and addresses the real ones.
 
+## How provider selection actually happens
+
+There is **no automatic provider router.** The orchestrator does not grade a task and decide
+"this one goes to Codex." Two things make that clear:
+
+- **A Claude subagent is native; another provider is a shell-out.** Claude workers are spawned
+  through the harness's Agent tool (tracked, visible in the agents view, model chosen by the
+  override → agent-type → inherit rule). Codex or Gemini are reached only by running their CLI as
+  an ordinary bash command — to the harness that's just a background process writing to a log,
+  not an "agent." Crossing providers therefore takes a *deliberate* shell-out; it never happens
+  on its own.
+- **So the chooser is you, not an algorithm.** A different provider gets used only because (a)
+  you ask for it in the moment, or (b) your hints file encodes it as a standing convention — e.g.
+  a line in `CLAUDE.md`: *"after non-trivial changes, run the cross-model review via Codex."*
+  Encoding it is what makes the behavior durable instead of something you re-request each session.
+
+The two honest reasons to cross providers — neither automatic:
+
+- **Independence.** A reviewer with different training has different blind spots. The value is
+  that it's *different*, not that it's better (see [Why it works](#why-it-works)).
+- **Billing.** Codex and Gemini bill to OpenAI/Google, not your Claude usage — so routing work
+  there offloads Claude spend outright. This is a real lever, distinct from the Claude-only
+  model-tier savings in [docs/01](01-workflow.md#match-the-model-to-the-job).
+
+Default posture: investigation and implementation stay on Claude (tiered across Opus/Sonnet/
+Haiku); the *review* step is where a different provider earns its place. Routing implementation
+itself to Codex/Gemini is possible, but it's a deliberate choice, not the default.
+
 ## Review prompt template
 
 ```text
