@@ -28,5 +28,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
   fan-out, keeping the strong model for orchestration.
 - `install.sh` — copies bundled skills and agents to `~/.claude/` (global) or a target project's
   `.claude/`; re-run to update. Documented in the README.
+- `setup.sh` — interactive wizard (bash terminal menus) that generates a project `CLAUDE.md`:
+  asks which provider/model handles each task type (orchestration, implementation, recon,
+  review) plus stack basics, single-sources the behavioral rules from the template, and backs
+  up any existing file before overwrite.
 - `.gitignore` — ignores `.agent-logs/` and `*.log` (captured worker-agent output).
 - `README.md`, `ATTRIBUTION.md`, `LICENSE`.

@@ -74,3 +74,6 @@ echo
 echo "Installed $total item(s) [$SCOPE] -> $DEST_ROOT"
 echo "Skills: invoke with /<skill-name> (e.g. /watch-agents)."
 echo "Agents: spawn via the Agent tool with subagent_type (e.g. implementer)."
+echo
+echo "Next: generate a project CLAUDE.md with the setup wizard ->"
+echo "  $SCRIPT_DIR/setup.sh [project-dir]"

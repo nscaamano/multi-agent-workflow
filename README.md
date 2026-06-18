@@ -33,8 +33,10 @@ keeps each one's context lean and on-task, which is faster, higher quality, *and
 ## How to use this repo
 
 1. Read [docs/01-workflow.md](docs/01-workflow.md) to understand the orchestrator pattern.
-2. Copy [templates/CLAUDE.md](templates/CLAUDE.md) into the root of your own project and
-   fill in the placeholders (tech stack, conventions, gotchas).
+2. Generate a project hints file with `./setup.sh [project-dir]` — an interactive wizard that
+   asks which provider/model handles each task type (orchestration, implementation, recon,
+   review) plus your stack basics, and writes a ready-to-edit `CLAUDE.md`. (Or copy
+   [templates/CLAUDE.md](templates/CLAUDE.md) by hand and fill in the placeholders.)
 3. Drive your agentic CLI using the prompts in
    [docs/04-prompt-library.md](docs/04-prompt-library.md).
 4. **Iterate.** Every time the agent makes a mistake, add a line to your project's hints
@@ -62,6 +64,16 @@ cd multi-agent-workflow
 
 Re-running the installer overwrites previously installed copies, so it doubles as an update
 command.
+
+To generate a project's `CLAUDE.md`, run the setup wizard (the installer points you to it):
+
+```bash
+./setup.sh                 # generate CLAUDE.md in the current directory
+./setup.sh /path/to/repo   # generate it in another project
+```
+
+It asks which provider/model should handle each task type and prompts for your stack basics,
+then writes the file. An existing `CLAUDE.md` is backed up to `CLAUDE.md.bak` before overwrite.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) for sources and [CHANGELOG.md](CHANGELOG.md) for the
 revision history. Licensed under [MIT](LICENSE).
