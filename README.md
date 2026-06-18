@@ -26,6 +26,8 @@ keeps each one's context lean and on-task, which is faster, higher quality, *and
   second model review the work, written tool-agnostically.
 - [docs/04-prompt-library.md](docs/04-prompt-library.md) — copy-paste prompts for each phase.
 - [templates/CLAUDE.md](templates/CLAUDE.md) — a drop-in hints file for your own projects.
+- [.claude/skills/](.claude/skills/) — ready-to-install Claude Code skills, e.g.
+  `watch-agents` for observing spawned worker agents live.
 
 ## How to use this repo
 
@@ -36,6 +38,24 @@ keeps each one's context lean and on-task, which is faster, higher quality, *and
    [docs/04-prompt-library.md](docs/04-prompt-library.md).
 4. **Iterate.** Every time the agent makes a mistake, add a line to your project's hints
    file — and improve this repo's docs as your workflow sharpens.
+
+## Installing the skills
+
+This repo ships Claude Code skills under [.claude/skills/](.claude/skills/). Clone the repo and
+run the installer to copy them where Claude Code will find them:
+
+```bash
+git clone <this-repo> multi-agent-workflow
+cd multi-agent-workflow
+
+./install.sh                 # install globally to ~/.claude/skills/ (all projects)
+./install.sh /path/to/repo   # install into one project's .claude/skills/
+./install.sh --help          # usage
+```
+
+Then invoke a skill from Claude Code with `/<skill-name>` — e.g. `/watch-agents` to see what a
+spawned worker agent is doing live. Re-running the installer overwrites previously installed
+copies, so it doubles as an update command.
 
 See [ATTRIBUTION.md](ATTRIBUTION.md) for sources and [CHANGELOG.md](CHANGELOG.md) for the
 revision history. Licensed under [MIT](LICENSE).

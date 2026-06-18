@@ -18,4 +18,10 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 - `docs/03-cross-model-review.md` — tool-agnostic cross-model review.
 - `docs/04-prompt-library.md` — copy-paste prompts per phase.
 - `templates/CLAUDE.md` — drop-in hints file template.
+- `.claude/skills/watch-agents/` — skill to observe spawned worker agents live (list running
+  agents, snapshot their latest output, or hand off a live `tail -f`), with an `agent-watch.sh`
+  helper.
+- `install.sh` — copies bundled skills to `~/.claude/skills/` (global) or a target project's
+  `.claude/skills/`; re-run to update. Documented in the README.
+- `.gitignore` — ignores `.agent-logs/` and `*.log` (captured worker-agent output).
 - `README.md`, `ATTRIBUTION.md`, `LICENSE`.
