@@ -31,6 +31,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 - `setup.sh` — interactive wizard (bash terminal menus) that generates a project `CLAUDE.md`:
   asks which provider/model handles each task type (orchestration, implementation, recon,
   review) plus stack basics, single-sources the behavioral rules from the template, and backs
-  up any existing file before overwrite.
+  up any existing file before overwrite. When the project deploys to Vercel, it also captures
+  the expected git commit author and writes a gotcha to confirm `git config user.name`/`user.email`
+  match it before committing (a mismatched author after switching machines has blocked deploys).
 - `.gitignore` — ignores `.agent-logs/` and `*.log` (captured worker-agent output).
 - `README.md`, `ATTRIBUTION.md`, `LICENSE`.

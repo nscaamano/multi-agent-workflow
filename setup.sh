@@ -84,6 +84,21 @@ RUN="$(ask "  Run / build command (e.g. pnpm dev): " "<!-- fill in -->")"
 TEST="$(ask "  Test command (e.g. pnpm test): " "<!-- fill in -->")"
 LINT="$(ask "  Lint / format command (e.g. pnpm lint): " "<!-- fill in -->")"
 
+VERCEL_GOTCHA=""
+VERCEL="$(ask "  Deploying to Vercel? (y/N): " "N")"
+if [[ "$VERCEL" =~ ^[Yy] ]]; then
+  DEFAULT_GIT_NAME="$(git -C "$TARGET" config user.name 2>/dev/null || true)"
+  DEFAULT_GIT_EMAIL="$(git -C "$TARGET" config user.email 2>/dev/null || true)"
+  GIT_NAME="$(ask "  Git commit name Claude should use [$DEFAULT_GIT_NAME]: " "$DEFAULT_GIT_NAME")"
+  GIT_EMAIL="$(ask "  Git commit email Claude should use [$DEFAULT_GIT_EMAIL]: " "$DEFAULT_GIT_EMAIL")"
+  if [ -n "$GIT_NAME" ] && [ -n "$GIT_EMAIL" ]; then
+    GIT_TARGET="match \`$GIT_NAME <$GIT_EMAIL>\`"
+  else
+    GIT_TARGET="match the identity you committed with at setup"
+  fi
+  VERCEL_GOTCHA="- This project deploys via Vercel. Before committing, run \`git config user.name\` / \`git config user.email\` and confirm they $GIT_TARGET — a mismatched commit author (e.g. after switching machines) has blocked Vercel deployments before."
+fi
+
 # Single-source the behavioral rules from the template (between its two headings).
 RULES=""
 [ -f "$TEMPLATE" ] && RULES="$(awk '/^## Behavioral rules/{f=1} f&&/^## Project context/{exit} f{print}' "$TEMPLATE")"
@@ -139,7 +154,7 @@ $RULES
 
 <!-- Add a line every time the agent makes a mistake, so it doesn't repeat it. -->
 
--
+${VERCEL_GOTCHA:--}
 EOF
 
 echo >&2
